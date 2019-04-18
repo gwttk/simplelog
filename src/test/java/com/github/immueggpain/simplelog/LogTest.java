@@ -1,6 +1,7 @@
 package com.github.immueggpain.simplelog;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.github.immueggpain.simplelog.SimpleLog.println;
+import com.github.immueggpain.simplelog.SimpleLog;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,9 @@ public class LogTest {
 
 	@Test
 	public void testLog() {
-		
+		SimpleLog.getPrinter();
+		println("a simple line");
+		println("fmt line %d %s", 233, "ready");
 	}
 
 }
