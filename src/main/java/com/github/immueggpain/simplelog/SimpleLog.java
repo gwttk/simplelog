@@ -8,16 +8,35 @@ import java.time.format.DateTimeFormatter;
 public class SimpleLog {
 
 	private static ZoneId zoneId = ZoneId.systemDefault();
-	private static DateTimeFormatter dtfmt = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+	private static DateTimeFormatter dtfmt = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss.SSS");
 	private static PrintWriter printer = new PrintWriter(System.out, true);
 
-	public static void println(String line) {
+	public static void println(int level, String line) {
+		String lvl;
+		switch (level) {
+		case 0:
+			lvl = "I";
+			break;
+		case 1:
+			lvl = "W";
+			break;
+		case 2:
+			lvl = "E";
+			break;
+		default:
+			lvl = "" + level;
+			break;
+		}
 		String datetime = ZonedDateTime.now(zoneId).format(dtfmt);
-		printer.println(datetime + " " + line);
+		printer.println(lvl + " " + datetime + " " + line);
+	}
+
+	public static void println(int level, String line, Object... args) {
+		println(level, String.format(line, args));
 	}
 
 	public static void println(String line, Object... args) {
-		println(String.format(line, args));
+		println(0, line, args);
 	}
 
 	public static ZoneId getZoneId() {

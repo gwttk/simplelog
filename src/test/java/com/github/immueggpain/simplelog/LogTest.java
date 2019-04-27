@@ -10,8 +10,8 @@ public class LogTest {
 	@Test
 	public void testLog() {
 		SimpleLog.getPrinter();
-		println("a simple line");
-		println("fmt line %d %s", 233, "ready");
+		println(0, "a simple line");
+		println(0, "fmt line %d %s", 233, "ready");
 	}
 
 }
