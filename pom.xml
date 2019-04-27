@@ -55,12 +55,6 @@
 						</goals>
 						<configuration>
 							<target>
-								<zip
-									destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip"
-									basedir="${project.build.directory}" includes="lib/**">
-									<fileset dir="${project.build.directory}"
-										includes="${project.artifactId}-${project.version}.jar" />
-								</zip>
 							</target>
 						</configuration>
 					</execution>
