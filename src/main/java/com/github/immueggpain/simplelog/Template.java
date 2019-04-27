@@ -10,7 +10,7 @@ public class Template {
 		}
 	}
 
-	private void run(String[] args) {
+	private void run(String[] args) throws Throwable {
 	}
 
 }

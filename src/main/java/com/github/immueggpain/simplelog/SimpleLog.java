@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class SimpleLog {
 
 	private static ZoneId zoneId = ZoneId.systemDefault();
-	private static DateTimeFormatter dtfmt = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss.SSS");
+	private static DateTimeFormatter dtfmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'~'HH:mm:ss.SSSxxxxx'['VV']'");
 	private static PrintWriter printer = new PrintWriter(System.out, true);
 
 	public static void println(int level, String line) {
