@@ -27,7 +27,6 @@ public class LogTest {
 		outter.addSuppressed(sup2);
 		outter.addSuppressed(cause);
 		printex(outter);
-		outter.printStackTrace();
 	}
 
 }

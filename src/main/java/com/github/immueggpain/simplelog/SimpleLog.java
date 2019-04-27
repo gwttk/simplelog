@@ -96,11 +96,11 @@ public class SimpleLog {
 			println(String.valueOf(e));
 			StackTraceElement[] trace = e.getStackTrace();
 			for (StackTraceElement traceElement : trace)
-				println("\tat " + traceElement);
+				println(TAB + "at " + traceElement);
 
 			// Print suppressed exceptions, if any
 			for (Throwable se : e.getSuppressed())
-				printEnclosedStackTrace(se, trace, SUPPRESSED_CAPTION, "\t", dejaVu);
+				printEnclosedStackTrace(se, trace, SUPPRESSED_CAPTION, TAB, dejaVu);
 
 			// Print cause, if any
 			Throwable ourCause = e.getCause();
