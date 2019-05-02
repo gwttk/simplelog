@@ -29,4 +29,13 @@ public class LogTest {
 		printex(outter);
 	}
 
+	@Test
+	public void testLogOutput() {
+		println("output to %s", "stdout");
+		println("output to %s", "stderr");
+		println("output to %s", "singlefile.log");
+		println("output to %s", "DATE.log");
+		println("output to %s", "prefix-DATE.log");
+	}
+
 }
