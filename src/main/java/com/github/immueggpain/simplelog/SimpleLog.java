@@ -14,6 +14,8 @@ import java.util.IdentityHashMap;
 import java.util.Set;
 
 public class SimpleLog {
+	public static final int STDOUT = 1;
+	public static final int STDERR = 2;
 
 	/** Caption for labeling causative exception stack traces */
 	private static final String CAUSE_CAPTION = "Caused by: ";
@@ -25,11 +27,14 @@ public class SimpleLog {
 	private static final String TAB = "    ";
 
 	private static final Object mutex = new Object();
+
 	private static ZoneId zoneId = ZoneId.systemDefault();
 	private static DateTimeFormatter dtfmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'~'HH:mm:ss.SSSxxxxx'['VV']'");
 	private static PrintWriter printer;
 	private static DateTimeFormatter segfmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private static String fileName;
+	private static boolean outputToFile = true;
+	private static int out;
 
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -58,18 +63,29 @@ public class SimpleLog {
 				break;
 			}
 			String datetime = ZonedDateTime.now(zoneId).format(dtfmt);
-			String segName = LocalDateTime.now(zoneId).format(segfmt);
+			String finalLine = lvl + " " + datetime + " " + line;
 
-			synchronized (mutex) {
-				if (!segName.equals(fileName)) {
-					if (printer != null)
-						printer.close();
-					printer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream(segName + ".log", true), StandardCharsets.UTF_8)));
-					fileName = segName;
+			if (outputToFile) {
+				String segName = LocalDateTime.now(zoneId).format(segfmt);
+				synchronized (mutex) {
+					if (!segName.equals(fileName)) {
+						if (printer != null)
+							printer.close();
+						printer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+								new FileOutputStream(segName + ".log", true), StandardCharsets.UTF_8)));
+						fileName = segName;
+					}
+
+					printer.println(finalLine);
 				}
+			} else {
+				if (out == STDOUT) {
+					System.out.println(finalLine);
+				} else if (out == STDERR) {
+					System.err.println(finalLine);
+				} else {
 
-				printer.println(lvl + " " + datetime + " " + line);
+				}
 			}
 		} catch (Throwable e) {
 			// cause this is log, we can't do anything but print console
@@ -168,12 +184,19 @@ public class SimpleLog {
 		SimpleLog.printer = printer;
 	}
 
-	public static DateTimeFormatter getSegfmt() {
-		return segfmt;
+	public static void setOutputFilePattern(String pattern) {
+		SimpleLog.segfmt = DateTimeFormatter.ofPattern(pattern);
+		outputToFile = true;
 	}
 
-	public static void setSegfmt(DateTimeFormatter segfmt) {
-		SimpleLog.segfmt = segfmt;
+	public static void setOutputFile(String filename) {
+		SimpleLog.segfmt = DateTimeFormatter.ofPattern("'" + filename + "'");
+		outputToFile = true;
+	}
+
+	public static void setOutputStd(int out) {
+		SimpleLog.out = out;
+		outputToFile = false;
 	}
 
 }

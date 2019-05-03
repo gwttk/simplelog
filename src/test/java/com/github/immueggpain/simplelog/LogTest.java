@@ -8,6 +8,7 @@ public class LogTest {
 
 	@Test
 	public void testLog() {
+		SimpleLog.setOutputStd(SimpleLog.STDOUT);
 		// level line
 		println(0, "a simple line");
 		// level fmt line
@@ -31,10 +32,15 @@ public class LogTest {
 
 	@Test
 	public void testLogOutput() {
+		SimpleLog.setOutputStd(SimpleLog.STDOUT);
 		println("output to %s", "stdout");
+		SimpleLog.setOutputStd(SimpleLog.STDERR);
 		println("output to %s", "stderr");
+		SimpleLog.setOutputFile("singlefile");
 		println("output to %s", "singlefile.log");
+		SimpleLog.setOutputFilePattern("yyyy-MM-dd");
 		println("output to %s", "DATE.log");
+		SimpleLog.setOutputFilePattern("'prefix-'yyyy-MM-dd");
 		println("output to %s", "prefix-DATE.log");
 	}
 
