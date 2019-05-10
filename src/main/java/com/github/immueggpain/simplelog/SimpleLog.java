@@ -43,6 +43,19 @@ public class SimpleLog {
 					printer.close();
 			}
 		}, "SimpleLog-shutdown"));
+
+		new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(10 * 1000);
+				} catch (InterruptedException e) {
+				}
+				synchronized (mutex) {
+					if (printer != null)
+						printer.flush();
+				}
+			}
+		}, "SimpleLog-flush").start();
 	}
 
 	public static void println(int level, String line) {
