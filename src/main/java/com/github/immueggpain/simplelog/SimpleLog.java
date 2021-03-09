@@ -43,6 +43,8 @@ public class SimpleLog {
 				if (printer != null)
 					printer.close();
 			}
+			if (outWriter != null)
+				outWriter.close();
 		}, "SimpleLog-shutdown"));
 
 		new Thread(() -> {
@@ -55,6 +57,8 @@ public class SimpleLog {
 					if (printer != null)
 						printer.flush();
 				}
+				if (outWriter != null)
+					outWriter.flush();
 			}
 		}, "SimpleLog-flush").start();
 	}
