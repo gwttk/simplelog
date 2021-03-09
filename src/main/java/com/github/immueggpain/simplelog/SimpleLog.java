@@ -35,6 +35,7 @@ public class SimpleLog {
 	private static String fileName;
 	private static boolean outputToFile = true;
 	private static int out;
+	private static PrintWriter outWriter;
 
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -99,6 +100,10 @@ public class SimpleLog {
 				} else {
 
 				}
+			}
+
+			if (outWriter != null) {
+				outWriter.println(finalLine);
 			}
 		} catch (Throwable e) {
 			// cause this is log, we can't do anything but print console
@@ -210,6 +215,10 @@ public class SimpleLog {
 	public static void setOutputStd(int out) {
 		SimpleLog.out = out;
 		outputToFile = false;
+	}
+
+	public static void setOutputWriter(PrintWriter out) {
+		SimpleLog.outWriter = out;
 	}
 
 }
