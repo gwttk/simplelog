@@ -194,14 +194,6 @@ public class SimpleLog {
 		SimpleLog.dtfmt = dtfmt;
 	}
 
-	public static PrintWriter getPrinter() {
-		return printer;
-	}
-
-	public static void setPrinter(PrintWriter printer) {
-		SimpleLog.printer = printer;
-	}
-
 	public static void setOutputFilePattern(String pattern) {
 		SimpleLog.segfmt = DateTimeFormatter.ofPattern(pattern);
 		outputToFile = true;
