@@ -21,6 +21,7 @@ import java.util.Set;
  * <li>{@link #setOutputFilePattern(String)}</li>
  * <li>{@link #setOutputWriter(PrintWriter)}</li>
  * </ul>
+ * will create a thread for flushing. not good for android.
  */
 public class SimpleLog {
 	public static final int STDOUT = 1;
