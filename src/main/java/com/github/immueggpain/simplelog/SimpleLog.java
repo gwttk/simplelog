@@ -13,6 +13,15 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
 
+/**
+ * all types of output:
+ * <ul>
+ * <li>{@link #setOutputStd(int)}</li>
+ * <li>{@link #setOutputFile(String)}</li>
+ * <li>{@link #setOutputFilePattern(String)}</li>
+ * <li>{@link #setOutputWriter(PrintWriter)}</li>
+ * </ul>
+ */
 public class SimpleLog {
 	public static final int STDOUT = 1;
 	public static final int STDERR = 2;
