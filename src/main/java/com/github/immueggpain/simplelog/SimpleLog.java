@@ -43,9 +43,10 @@ public class SimpleLog {
 	private static PrintWriter printer;
 	private static DateTimeFormatter segfmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private static String fileName;
-	private static boolean outputToFile = true;
+	private static boolean outputToFile = false;
 	private static int out;
 	private static PrintWriter outWriter;
+	private static boolean stdWriteTime = false;
 
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -90,10 +91,11 @@ public class SimpleLog {
 				lvl = "" + level;
 				break;
 			}
-			String datetime = ZonedDateTime.now(zoneId).format(dtfmt);
-			String finalLine = lvl + " " + datetime + " " + line;
 
+			String finalLine;
 			if (outputToFile) {
+				String datetime = ZonedDateTime.now(zoneId).format(dtfmt);
+				finalLine = lvl + " " + datetime + " " + line;
 				String segName = LocalDateTime.now(zoneId).format(segfmt);
 				synchronized (mutex) {
 					if (!segName.equals(fileName)) {
@@ -107,6 +109,12 @@ public class SimpleLog {
 					printer.println(finalLine);
 				}
 			} else {
+				if (stdWriteTime) {
+					String datetime = ZonedDateTime.now(zoneId).format(dtfmt);
+					finalLine = lvl + " " + datetime + " " + line;
+				} else {
+					finalLine = lvl + " " + line;
+				}
 				if (out == STDOUT) {
 					System.out.println(finalLine);
 				} else if (out == STDERR) {
@@ -225,6 +233,10 @@ public class SimpleLog {
 
 	public static void setOutputWriter(PrintWriter out) {
 		SimpleLog.outWriter = out;
+	}
+
+	public static void setStdWriteTime(boolean stdWriteTime) {
+		SimpleLog.stdWriteTime = stdWriteTime;
 	}
 
 }
