@@ -40,22 +40,24 @@ public class SimpleLog {
 
 	private static ZoneId zoneId = ZoneId.systemDefault();
 	private static DateTimeFormatter dtfmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'~'HH:mm:ss.SSSxxxxx'['VV']'");
-	private static PrintWriter printer;
+	private static PrintWriter filePrinter;
 	private static DateTimeFormatter segfmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private static String fileName;
 	private static boolean outputToFile = false;
 	private static int out;
 	private static PrintWriter outWriter;
 	private static boolean stdWriteTime = false;
+	private static boolean shutdownFlushThread = false;
 
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			synchronized (mutex) {
-				if (printer != null)
-					printer.close();
+				if (filePrinter != null)
+					filePrinter.close();
 			}
 			if (outWriter != null)
 				outWriter.close();
+			shutdownFlushThread = true;
 		}, "SimpleLog-shutdown"));
 
 		new Thread(() -> {
@@ -64,9 +66,11 @@ public class SimpleLog {
 					Thread.sleep(10 * 1000);
 				} catch (InterruptedException e) {
 				}
+				if (shutdownFlushThread)
+					break;
 				synchronized (mutex) {
-					if (printer != null)
-						printer.flush();
+					if (filePrinter != null)
+						filePrinter.flush();
 				}
 				if (outWriter != null)
 					outWriter.flush();
@@ -99,14 +103,14 @@ public class SimpleLog {
 				String segName = LocalDateTime.now(zoneId).format(segfmt);
 				synchronized (mutex) {
 					if (!segName.equals(fileName)) {
-						if (printer != null)
-							printer.close();
-						printer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+						if (filePrinter != null)
+							filePrinter.close();
+						filePrinter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
 								new FileOutputStream(segName + ".log", true), StandardCharsets.UTF_8)));
 						fileName = segName;
 					}
 
-					printer.println(finalLine);
+					filePrinter.println(finalLine);
 				}
 			} else {
 				if (stdWriteTime) {
