@@ -48,6 +48,7 @@ public class SimpleLog {
 	private static PrintWriter outWriter;
 	private static boolean stdWriteTime = false;
 	private static boolean shutdownFlushThread = false;
+	private static Thread flushThread = null;
 
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -60,7 +61,7 @@ public class SimpleLog {
 			shutdownFlushThread = true;
 		}, "SimpleLog-shutdown"));
 
-		new Thread(() -> {
+		flushThread = new Thread(() -> {
 			while (true) {
 				try {
 					Thread.sleep(10 * 1000);
@@ -75,7 +76,9 @@ public class SimpleLog {
 				if (outWriter != null)
 					outWriter.flush();
 			}
-		}, "SimpleLog-flush").start();
+		}, "SimpleLog-flush");
+		flushThread.setDaemon(true);
+		flushThread.start();
 	}
 
 	public static void println(int level, String line) {
